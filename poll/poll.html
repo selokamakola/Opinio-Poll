@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+       <script  src="https://code.jquery.com/jquery-3.3.1.js"  crossorigin="anonymous"></script>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div > 
+            <h3>What is your favorite programming language</h3>
+            <form action="index.php" method="POST">
+  <input type="radio" name="user_choice" value="PHP" checked> PHP<br>
+  <input type="radio" name="user_choice" value="C#"> C#<br>
+  <input type="radio" name="user_choice" value="C++"> C++<br>
+  <input type="radio" name="user_choice" value="JAVA"> JAVA<br>
+  <input type="radio" name="user_choice" value="Python"> Python<br>
+  <input type="submit" id ="vote" value ="vote" name="voteq" />
+</form>
+            
+            
+            
+  <div id = "container" > 
+      <p>Avg results</p>
+<div id="records"></div> 
+</div> 
+ <input type="button" id = "View"  value = "View Results" name="viewResS" />
+</div>
+        
+        
+        
+ <script> 
+
+    $(function(){ 
+       
+        $("#vote").on('click', function(){   
+            var language ="PHP";  
+            var radioValue = $("input[name='user_choice']:checked").val();
+            if(radioValue){ 
+                language = radioValue;
+            }     
+            $.ajax({  
+              method: "POST",   
+              url: "index.php",
+              data: {"language":language}, 
+              success: function(data) {   
+            }, 
+             }) 
+            
+       }); 
+       
+       
+       
+         $("#View").on('click', function(){   
+            $.ajax({  
+              method: "POST",
+              url: "index.php",  
+             })  .done(function( data ) { 
+          var result =  $.parseJSON(data); ;  
+          
+           
+ var string = '<table border="1"> <tr>  <th>Programming Language</th>  <th>Average votes (%)</th><tr> ';
+ var cnt = 0;
+ var totalVotes = 0;
+        $.each( result, function( key, value ) {  
+           totalVotes = totalVotes + parseInt(value['num_votes']);
+     }); 
+    
+      $.each( result, function( key, value ) { 
+           cnt++;  
+        string += '<tr>  <th>'+value['language']+'</th>  <th>'+parseInt(parseInt(value['num_votes'])/totalVotes*100)   +'</th>' 
+    }); 
+             string += '</table>'; 
+ 
+          $("#records").html(string); 
+ 
+       }); 
+    });
+    });
+
+    </script>  
+    </body>
+    
+</html>
